@@ -70,8 +70,71 @@ type Book = {
     price: number;
 }
 
-let Book = {
+let books :Book = {
     title: 'Reactで作るTodoアプリ',
     author: 'triger',
     price: 1000
 }
+
+//ネストされたオブジェクト型
+type Employee = {
+    id: string;
+    name: string;
+    address: {
+        street: string;
+        city: string;
+        zipCode: string;
+    };
+};
+
+//型エイリアスで書き換えることも可能
+type NewAdress = {
+    street: string;
+    city: string;
+    zipCode: string;
+};
+
+type NewEmployee = {
+    id: string;
+    name: string;
+    address: NewAdress;
+}
+
+//オプショナルプロパティ
+type Person = {
+    name: string;
+    age?: number;  //ageはオプショナル
+}
+
+const vite :Person = {
+    name: 'vite'  //オブジェクトにageプロパティが含まれていなくても問題なし
+};
+
+//読み取り専用プロパティ　後から値を変更することができない
+type ImmutablePerson = {
+    readonly name: string;
+    age:  number;
+};
+
+const alice :ImmutablePerson = {
+    name: 'Alice',
+    age: 12,
+};
+//ageのみ値の変更が可能
+alice.age =  15;
+
+
+//Array型
+//配列の型推論
+const nums = [1,2,3,4,5];  //number[]型
+const personNames = ['yuki','kenta','taro'];//String[]型
+const nums2 = [1,2,3,'4']; //(string | number)[]型
+
+//型注釈によるArray型の指定
+let fruits: string[];  
+fruits = ['banana','pear'];
+console.log(fruits[0].toUpperCase());
+
+//Tupple型
+
+//
