@@ -137,4 +137,108 @@ console.log(fruits[0].toUpperCase());
 
 //Tupple型
 
-//
+//型注釈によるtuple型の指定　[string,number]型
+const person:[string,number] = ['satoshi',20];
+
+//ラベル付きtupple型
+type RGB = [red:number, green: number, blue:number];
+
+//タプルの要素のオプション化
+type Foo = [frist: number, second?: string, ...rest: any[]];
+
+let a:Foo = [14]; //first要素のみの配列を代入可能
+let b:Foo = [21,'takashi'] //frist要素とsecond要素
+let c:Foo = [34,'nishi','yuki',34,56,'aaa'] //...restの複数の要素も割り当てることができる
+
+//インターセクション型　AかつBみたいな感じ  
+
+type Engine = {
+    engineType : string;
+    volume: number;
+}
+
+type Wheels = {
+    wheelCount: number;
+}
+
+type Car = Engine & Wheels
+
+const MyCar: Car  = {
+    engineType: 'V8',
+    volume: 3000,
+    wheelCount: 4,
+}
+console.log(MyCar.volume, MyCar.engineType);
+
+
+
+//any型　　利用は極力を避けるべき サードパティのライブラリや外部APIから返されるデータの型が不明の時、jsからtsへの移行の時とかは使う
+//any型の変数の挙動
+let value1: any = 1; //any型
+value1 = 'any型'
+// value1.nocheck(); //型チェックが行われないのでエラーなし
+
+let value2: any = [1,2,3];
+let value3 = value1 + value2; //型チェックが行われないのでエラーなし
+
+
+//unknown型　
+//unknown型の変数を別の型が期待される変数に直接代入することはできない
+//算術演算もできない
+
+//unknown型の変数を他の型に特定
+let value4: unknown = 10;
+if(typeof value4 === "number"){
+    console.log(value4 + 1);
+};
+
+//null型　厳格なnullによる型チェック
+const person2  = {
+    age: 25,
+    firstName: Math.random() > 0.5 ? "Alice" : null
+};
+
+//NG.firstプロパティがnullである可能性があるためエラー
+// console.log(person2.firstName.toUpperCase());
+
+//OK
+console.log(person2.firstName?.toLowerCase());
+
+
+//関数と型
+//関数パラメーターに関しては型推論を行うことはできない
+
+function addNumbers (a:number, b:number){
+    return a + b;
+}
+
+//関数の戻り値の型注釈
+function addNumbers2 (a:number,b:number):number {
+    return a + b;
+}
+
+
+//オプショナルパラメーター
+//オプショナルパラメーターをつけるには、対象パラメーターに?をつける
+//↓の場合、string型とundefined型のユニオン型となる
+
+function printMessage (message?:string){
+    if(message){
+        console.log(message);
+    } else {
+        console.log('full');
+    }
+}
+
+printMessage('Hello World');
+printMessage();
+
+//関数型
+let myFunction:(arg1: number, arg2:string) => boolean;
+//↑number型のarg1とstring型のarg2を引数として受け取り、boolean型を返す
+
+//関数式と関数型
+const FunctionNumber : (a:number, b:number) => number = (a,b) =>  a + b;
+
+//関数型と
+
