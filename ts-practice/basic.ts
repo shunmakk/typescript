@@ -240,5 +240,132 @@ let myFunction:(arg1: number, arg2:string) => boolean;
 //関数式と関数型
 const FunctionNumber : (a:number, b:number) => number = (a,b) =>  a + b;
 
-//関数型と
+//関数型と型エイリアス
+type add = (a: number,b:number) => number;
+
+const FunctionNumber2 :add = (a,b) => a + b;
+
+//void型
+//void型は、関数の戻り値が存在しないことを示すために使用される型
+function greet():void{
+    console.log('Hello');
+}
+
+//関数型の戻り値の型がvoid型の場合
+type Returnvoid = () => void;
+
+//OK,実際にはstring型の値を返す関数の代入
+const greenWorld:Returnvoid = () => {
+        return 'Hello';
+};
+
+//resultの型は　voidとして扱われ、関数の戻り値の型情報は無視される
+const result = greenWorld();
+
+//NG. typescriptはresultの型をvoidと見做しているため、string型は使えない
+// console.log(result.toUpperCase());
+
+//never型
+//関数が戻り値を返さず、かつ呼び出し元に制御を戻すことが決してない状況を表すための特殊な型
+
+//関数の戻り値に対するnever型の指定
+
+////指定されたメッセージを用いてエラーをスローし、その結果プログラムは異常終了する
+function throwError(message: string) : never {
+    throw new Error(message)
+}
+
+////無限ループ
+function infiniteLoop():never{
+    while(true){
+        console.log('NEVER RETURN');
+    }
+}
+
+//網羅性チェックとnever型
+type Shape = "circle" | "square" | "triangle";
+
+////全てのケースを処理するための関数
+function handleShapes(shape: Shape){
+    switch(shape){
+        case "circle" :
+            //円を処理する
+        break;
+        case "square":
+            //正方形を処理する
+        break;
+        case "triangle":
+            //三角形を処理する
+        break;
+        default:
+            //shapeが網羅的にチェックされていれば、defaultケースには決して到達できない
+            const exhaustiveCheck: never = shape;
+            throw new Error(`未処理の形状: ${exhaustiveCheck}`);
+    }
+}
+
+//関数の使用例
+handleShapes("circle")  //OK
+// handleShapes("dddd") //NG
+
+//関数オーバーロード
+
+//２つの引数を加算して返すだけの関数とその挙動 any型
+function twoAddNumber(a:any,b:any){
+    return a + b
+}
+
+////引数として number型の値を受け取った場合
+let results = twoAddNumber(1,2)  //3
+////引数として string型の値を受け取った場合
+results = twoAddNumber("1","2")  //"12"
+////引数として number型とstring型の値を受け取った場合
+results = twoAddNumber(2,"4")  //"24"
+
+//number型とstring型のユニオン型を、それぞれパラメータの型に指定する
+////関数に文字列をわたしたときに戻り値に対してstring型のメソッドを使用するとエラーになる
+function addNumbers3(a: string | number , b: string | number){
+    if(typeof a === "number" && b === "number"){
+        return a + b;
+    } else {
+        return a.toString() + b.toString();
+    }
+}
+let results2 = addNumbers3("1","2");
+console.log(results2);
+
+//NG  string型のメソッドを呼び出そうとするエラー
+results2.includes("1");
+
+//関数オーバーロード　↑上の問題を解決できる
+////同じ名前の関数に対して複数の呼び出しシグネチャが定義でき、関数の呼び出し方法に応じて、typescriptコンパイラによる型推論をより正確に行える
+
+////オーバーロードのシグネチャ
+function addNumbers4(a:number,b: number): number;
+function addNumbers4(a:string,b: string): string;
+function addNumbers4(a:number,b: string): string;
+function addNumbers4(a:string,b: number): string;
+
+
+////関数本体
+function addNumbers4(a: number | string , b: number | string): number | string{
+    if(typeof a === "number" && b === "number"){
+        return a + b;
+    } else {
+        return a.toString() + b.toString();
+    }
+}
+
+////result3はstring型として推論される
+let results3 = addNumbers4("1","2");
+
+//string型と定義されているためエラーは起きない
+results3.includes('1') //true
+
+
+
+
+
+
+
 
